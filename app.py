@@ -116,7 +116,7 @@ notification_bar = st.empty()
 
 scored_data_section = st.empty()
 scoring_time_section = st.columns([1, 1, 2])
-scored_data = pd.Series(name="Prediction")
+scored_data = pd.Series(name="Prediction", dtype="float64")
 scored_data_section.write("No data scored yet")
 
 if pressed_score:

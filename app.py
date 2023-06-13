@@ -50,7 +50,11 @@ expander.markdown(
 )
 expander.image(Image.open("img/bleedout.jpg"), use_column_width=True)
 expander.markdown(
-    "See the project here: https://app.datarobot.com/projects/643eab974c62a7e14b723c82/models"
+    """
+    See the project here: https://app.datarobot.com/projects/643eab974c62a7e14b723c82/models
+
+    And the deployment here: https://app.datarobot.com/deployments/644ffa6467e8bb38ba6370b4/overview
+    """
 )
 
 with st.sidebar.form(key="model_activation"):

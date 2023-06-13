@@ -1,0 +1,5 @@
+datarobot-predict
+pandas
+Pillow
+requests
+streamlit

@@ -15,7 +15,9 @@ def load_model():
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/bleedout_train.csv").drop(columns="Bleedout")
+    return (
+        pd.read_csv("data/bleedout_train.csv").drop(columns="Bleedout").sample(n=1000)
+    )
 
 
 @st.cache_data

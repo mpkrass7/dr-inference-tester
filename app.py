@@ -144,15 +144,16 @@ if pressed_score:
                 len(st.session_state["data"]) / max_records_per_realtime_call
             )
             for i in range(n_calls):
-                score_record = st.session_state["data"].iloc[
-                    i
-                    * max_records_per_realtime_call : (i + 1)
-                    * max_records_per_realtime_call
-                ]
-                response = hf.score_model(score_record)
+                start_range = i * max_records_per_realtime_call
+                end_range = min(
+                    (i + 1) * max_records_per_realtime_call,
+                    len(st.session_state["data"]),
+                )
+                score_records = st.session_state["data"].iloc[start_range:end_range]
+                response = hf.score_model(score_records)
                 scored_data = scored_data.append(response, ignore_index=True)
                 notification_bar.info(
-                    f"Scored {i + 1} records out of {len(st.session_state['data'])}"
+                    f"Scored {end_range} records out of {len(st.session_state['data'])}"
                 )
                 scored_data_section.write(scored_data.rename("Prediction"))
     time_elapsed = round(time.time() - current_time, 3)

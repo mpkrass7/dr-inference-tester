@@ -32,8 +32,5 @@ def score_model(data):
     results = requests.post(
         API_URL, data=data.to_json(orient="records"), headers=HEADERS
     )
-    return (
-        pd.DataFrame(results.json()["data"][0]["predictionValues"])
-        .head(1)
-        .loc[:, "value"]
-    )
+    data = results.json()["data"]
+    return pd.Series([i["predictionValues"][0]["value"] for i in data])

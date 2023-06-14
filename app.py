@@ -1,3 +1,5 @@
+import math
+
 from datarobot_predict.scoring_code import ScoringCodeModel
 import pandas as pd
 from PIL import Image
@@ -62,10 +64,16 @@ expander.markdown(
 with st.sidebar.form(key="model_activation"):
 
     number_of_records = st.number_input(
-        "Input the number of records to Score",
+        "Input the number of records to score",
         min_value=1,
         max_value=1000000,
         value=1000,
+    )
+    max_records_per_realtime_call = st.number_input(
+        "Maximum number of records to send in a single API call (realtime only)",
+        min_value=1,
+        max_value=500000,
+        value=300,
     )
     pressed_scenario = st.form_submit_button("Generate Data")
 
@@ -132,8 +140,15 @@ if pressed_score:
             scored_data_section.write(model.predict(st.session_state["data"]))
             notification_bar.info(f"Scored {len(st.session_state['data'])} records")
         else:
-            for i in range(len(st.session_state["data"])):
-                score_record = st.session_state["data"].iloc[i : i + 1, :]
+            n_calls = math.ceil(
+                len(st.session_state["data"]) / max_records_per_realtime_call
+            )
+            for i in range(n_calls):
+                score_record = st.session_state["data"].iloc[
+                    i
+                    * max_records_per_realtime_call : (i + 1)
+                    * max_records_per_realtime_call
+                ]
                 response = hf.score_model(score_record)
                 scored_data = scored_data.append(response, ignore_index=True)
                 notification_bar.info(
